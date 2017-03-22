@@ -1,0 +1,47 @@
+#mainArea {
+  display: flex;
+}
+
+section {
+  border: 2px solid #4AA5D5;
+  margin: 10px;
+}
+
+#sidebar {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+#main-section {
+  width: 60%;
+}
+
+.post-title {
+  width: 60%;
+  border: 1px solid #999;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+#search {
+  width: 60%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.post,
+form {
+  padding: 8px;
+  margin: 10px;
+  border: 1px solid #bbb;
+}
+
+.red {
+  color: red;
+}
+
+.editFields {
+  display: none;
+}

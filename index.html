@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="description" content="[add your bin description]">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.3/backbone-min.js'></script>
+  <link rel="stylesheet" type="text/css" href="./index.css"></link>
+</head>
+
+<body>
+  <div id="mainArea">
+    <section id="sidebar">
+      <input id="search" placeholder="search by title" type="text" name="search-input">
+    </section>
+    <section id="main-section"></section>
+  </div>
+
+  <script type="text/template" id="postSideBar">
+      <div class="post-title"><%= title %></div>
+  </script>
+
+  <script type="text/template" id="postItem">
+    <div class="post-content">
+      <h3 class="post-title"><%= id %> - <%= title %></h3>
+      <p class="post-body"><%= body %></p>
+      <button class="post-edit">Edit</button>
+      <button class="post-delete">Delete</button>
+    </div>
+    <div class="editFields">
+      <input name="edit-title" type="text" value="<%= title %>" >
+      <br></br>
+      <textarea name="edit-body"><%= body %></textarea>
+      <br></br>
+      <button class="edit-confirm">Edit</button>
+      <button class="edit-close">Close</button>
+    </div>
+  </script>
+  
+  <script src="./app.js"></script>
+</body>
+
+</html>
