@@ -81,7 +81,7 @@ var AppView = Backbone.View.extend({
     },
     events: {
         'submit': 'extractFormData',
-        'keypress #search': 'filterByTitle'
+        'keyup #search': 'filterByTitle'
     },
     addOne: function(post) {
         var view = new SideBarPostView({ model: post });
@@ -89,16 +89,30 @@ var AppView = Backbone.View.extend({
     },
     addAll: function(posts) {
         posts.forEach(function(post) {
-          this.addOne(post);
-        })
+            this.addOne(post);
+        }, this);
     },
     filterByTitle: function(e) {
-        //check that keypressed is ENTER
-        if (e.keyCode == 13) {
-          var title = this.$search.value();
+        var title = this.$search.val();
+        if (title.length) {
+            var titleSubstrings = title.split(' ');
+            var filteredPosts = posts.filter(function(post) {
+                return titleSubstrings.every(function(substring){
+                    return post.get('title').indexOf(substring) >= 0;
+                });
+            });
+            if (filteredPosts.length) {
+                $('.post-title').remove();
+                this.$('#search-results').empty();
+                this.addAll(filteredPosts);
+            } else {
+                $('.post-title').remove();
+                this.$('#search-results').text('No results');
+            }
+        } else {
+            this.$('#search-results').empty();
+            this.addAll(posts);
         }
-        /*TODO: Filter collection and call addAll 
-        passing filtered collection*/
     },
     extractFormData: function(event) {
         event.preventDefault();
