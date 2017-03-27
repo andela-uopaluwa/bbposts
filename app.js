@@ -12,8 +12,19 @@ var SideBarPostView = Backbone.View.extend({
         'click .post-title': 'displayPost'
     },
     displayPost: function() {
-
+      var view = new MainSectionView({model: this.model});
+      $('#main-section').empty();
+      $('#main-section').append(view.render().el);
     },
+    render: function() {
+        this.$el.html(this.template(this.model.attributes));
+        return this;
+    },
+});
+
+var MainSectionView = Backbone.View.extend({
+    template: _.template($('#postItem').html()),
+
     render: function() {
         this.$el.html(this.template(this.model.attributes));
         return this;
