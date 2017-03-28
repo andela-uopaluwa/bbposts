@@ -11,10 +11,19 @@ var SideBarPostView = Backbone.View.extend({
     events: {
         'click .post-title': 'displayPost'
     },
-    displayPost: function() {
+    initialize: function() {
+        this.listenTo(this.model, 'destroy', this.remove)
+    },
+    displayPost: function(evt) {
+      //commented portions achieve same without the use of a view
       var view = new MainSectionView({model: this.model});
+      //var contentTemplate = _.template('<h3> <%= id %> - <%= title %></h3><p><%= body %></p>');
+      //contentTemplate(this.model.attributes);
       $('#main-section').empty();
+      $('.red').removeClass('red');
+      this.$(evt.currentTarget).addClass('red');
       $('#main-section').append(view.render().el);
+      //$('#main-section').append(contentTemplate(this.model.attributes));
     },
     render: function() {
         this.$el.html(this.template(this.model.attributes));
@@ -24,58 +33,22 @@ var SideBarPostView = Backbone.View.extend({
 
 var MainSectionView = Backbone.View.extend({
     template: _.template($('#postItem').html()),
-
+    events: {
+        'click .post-delete': 'deletePost'
+    },
+    initialize: function() {
+        this.listenTo(this.model, 'destroy', this.remove);
+    },
+    deletePost: function(e) {
+        this.model.destroy({success: function(model, response) {
+            posts.remove(model);
+        }})
+    },
     render: function() {
         this.$el.html(this.template(this.model.attributes));
         return this;
     },
 });
-// var PostView = Backbone.View.extend({
-//   className: 'post',
-//   events: {
-//     'click p': 'clickedParagraph',
-//     'dblclick .post-title': 'highlightTitle',
-//     'click .post-edit': 'openForm',
-//     'click .post-delete': 'deletePost',
-//     'click .edit-confirm': 'editPost',
-//     'click .edit-close': 'closeForm',
-//
-//   },
-//   template: _.template( $('#postItem').html()),
-//   initialize: function () {
-//     this.listenTo(this.model, 'change', this.render);
-//     this.listenTo(this.model, 'destroy', this.remove);
-//   },
-//   render: function () {
-//     this.$el.html(this.template(this.model.attributes));
-//     this.$title = this.$('.post-title');
-//     this.$post_body = this.$('.post-body');
-//     return this;
-//   },
-//   clickedParagraph: function (e) {
-//     this.$post_body.toggleClass('red');
-//   },
-//   highlightTitle: function (e) {
-//     this.$title.css('background-color', '#c00');
-//   },
-//   deletePost: function (e) {
-//     this.model.destroy({success: function(model, response) {
-//       posts.remove(model);
-//     }})
-//   },
-//   openForm: function (e) {
-//     this.$(".post-content").hide();
-//     this.$(".editFields").toggle();
-//   },
-//   closeForm: function (e) {
-//     this.render();
-//   },
-//   editPost: function (e) {
-//     var title = this.$("input[name='edit-title']").val();
-//     var body = this.$("textarea[name='edit-body']").val();
-//     this.model.save({title: title,body: body});
-//   }
-// });
 
 var AppView = Backbone.View.extend({
     el: '#mainArea',
