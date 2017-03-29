@@ -12,8 +12,15 @@ var SideBarPostView = Backbone.View.extend({
         'click .post-title': 'displayPost'
     },
     initialize: function() {
-        this.listenTo(this.model, 'destroy', this.remove)
+        this.listenTo(this.model, 'destroy', this.remove);
+        this.listenTo(this.model, 'change', this.maintain);
+        // this.listenTo(this.model, 'change:title', this.maintain);
     },
+    maintain: function() {
+        this.render();
+        var id = this.model.get('id');
+        this.$('.post-title[data-id='+ id +' ]').addClass('red');
+    },    
     displayPost: function(evt) {
       //commented portions achieve same without the use of a view
       var view = new MainSectionView({model: this.model});
@@ -34,10 +41,29 @@ var SideBarPostView = Backbone.View.extend({
 var MainSectionView = Backbone.View.extend({
     template: _.template($('#postItem').html()),
     events: {
-        'click .post-delete': 'deletePost'
+        'click .post-delete': 'deletePost',
+        'click .post-edit': 'editOpen',
+        'click .edit-close': 'editClose',
+        'click .edit-confirm': 'editPost'
     },
     initialize: function() {
         this.listenTo(this.model, 'destroy', this.remove);
+        this.listenTo(this.model, 'change', this.render);
+    },
+    editOpen: function() {
+        $('.post-content').hide();
+        $('.editFields').show();
+    },
+    editClose: function() {
+        // $('.editFields').hide();
+        // $('.post-content').show();
+        this.render();
+    },
+    editPost: function() {
+        var title = this.$('input[name="edit-title"]').val();
+        var body = this.$('textarea[name="edit-body"]').val();
+        this.model.save({title: title, body: body});
+        this.editClose();
     },
     deletePost: function(e) {
         this.model.destroy({success: function(model, response) {
